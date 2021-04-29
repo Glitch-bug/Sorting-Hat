@@ -1,7 +1,9 @@
 #_*_ coding: utf-8 _*_
+import os
 from sorting_bot import telegram_chatbot
 
-bot = telegram_chatbot(r"\Users\t\Desktop\CodeFiles\Python\Sorting Hat Bot\config.cfg")
+path = os.path.abspath('.\config.cfg')
+bot = telegram_chatbot(path)
 update_id = None
 
 def make_reply(msg):
