@@ -42,14 +42,17 @@ class datamanager():
         house_score = self.cur.execute(f"SELECT house_score FROM Houses WHERE id = {id}")
         for score in house_score:
             if score[0] == None:
+                print('i')
                 new_score = 0 + int(points)
                 house_score = self.cur.execute(f"SELECT house_score FROM Houses WHERE id = {id}")
+                break
             else:
+                print('o')
                 new_score = score[0] + int(points)
                 house_score = self.cur.execute(f"SELECT house_score FROM Houses WHERE id = {id}")
-                print(score[0])
-                print(score[0].type)
+                break
         self.cur.execute(f"UPDATE Houses SET house_score = {new_score} WHERE id = {id}")
+        self.con.commit()
         return new_score
 
     

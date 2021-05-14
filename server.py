@@ -54,8 +54,10 @@ def exec_commands(com):
             elif com.startswith(commands[i]) and i == 2:
                 instructions = com.split()
                 id = 0
+                print('hey',)
                 for house in houses:
                     id += 1
+                    print('penny')
                     if house == instructions[1]:
                         score = db.update_house_score(id, instructions[2])
                         reply = f"{instructions[1]} new score is {score} "
