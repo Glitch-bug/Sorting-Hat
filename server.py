@@ -18,36 +18,60 @@ update_id = None
 reply = None 
 
 #Commands and Reponses tuples
-messages = ('/synthesize tables', '/Houses')
-responses = (('...', '...', 'Tables systhesized', 'Tables already in existense'),)
+commands = ('/synthesize tables', '/Houses', '/award ')
+messages = ()
+m_responses = ()
+c_responses = (('...', '...', 'Tables systhesized', 'Tables already in existense'),)
 
 #Tuples of Houses
 houses = ('Gryffindor', 'Hufflepuff', 'Slytherin', 'Ravenclaw')
 
-def make_reply(msg):
-    """Provides a reply when messages are recieved"""
-    reply = None 
-
-    if msg is not None:
-        for i in range(len(messages)):
-            if msg == messages[i] and i == 0:
+def exec_commands(com):
+    """Handles and replies any recieved commands"""
+    reply = None
+    if com is not None:
+        for i in range(len(commands)):
+            if com == commands[i] and i == 0:
                 tables = db.create_tables(houses)
                 print(tables)
                 if tables == True:
-                    for j in range(len(responses[i]) - 1):
+                    for j in range(len(c_responses[i]) - 1):
                         #can use join and split functions to create softer code?? at least in future instances
-                        bot.send_message(responses[i][j], from_)
+                        bot.send_message(c_responses[i][j], from_)
                 else:
-                    reply = responses[i][(len(responses[i])-1)]
+                    reply = c_responses[i][(len(c_responses[i])-1)]
                 break
-            elif msg == messages[i] and i == 1:
+            elif com == commands[i] and i == 1:
                 house_info = db.house_info()
-                reply = 'House ID | HOUSE  | SCORE \n'
+                reply = 'Houses'.center(20,'_')+'\n'+'HOUSE'+ ' '*14+'|SCORE'+'\n'
                 for house in house_info:
-                    reply += f'{house[0]} | {house[1]} | {house[2]}\n'
+                    if house[0] == 3:
+                        reply += f'{house[1]}' + ' '*12 + f'{house[2]}'+'\n'
+                    elif house[0] == 4:
+                        reply += f'{house[1]}' + ' '*8 + f'{house[2]}'+'\n'
+                    else:
+                        reply += f'{house[1]}' + ' '*10 + f'{house[2]}'+'\n'
+            elif com.startswith(commands[i]) and i == 2:
+                instructions = com.split()
+                id = 0
+                for house in houses:
+                    id += 1
+                    if house == instructions[1]:
+                        score = db.update_house_score(id, instructions[2])
+                        reply = f"{instructions[1]} new score is {score} "
+                    
     return reply
 
-#Checks for updates to messages and passes re to make reply function
+def make_reply(msg):
+    """Provides a reply when messages are recieved"""
+    reply = None 
+    if msg is not None:
+        for i in range(len(messages)):
+            if msg == message[i]:
+                reply = m_responses[i]
+    return reply
+
+#Checks for updates to messages and passes re to make reply function 
 while True:
     print('...')
     updates = bot.get_updates(offset=update_id)
@@ -65,12 +89,19 @@ while True:
             elif item["message"]["chat"]["type"] == "supergroup" or "group":
                 message = item["message"]["text"]
                 from_ = item["message"]["chat"]["id"]
-                reply = make_reply(message)
+                if message.startswith('/'):
+                    reply = exec_commands(message)
+                    parse_mode = 'Markdown'
+                else:
+                    reply = make_reply(message)
             else:
             #Identifies messages and sends results to the make reply function
                 message = item["message"]["text"]
                 from_ = item["message"]["from"]["id"]
-                reply = make_reply(message)
+                if message.startswith("/"):
+                    reply = exec_commands(message)
+                else:
+                    reply = make_reply(message)
         except KeyError:
             message = None
             from_ = None
