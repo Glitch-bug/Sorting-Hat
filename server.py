@@ -18,7 +18,7 @@ update_id = None
 reply = None 
 
 #Commands and Reponses tuples
-commands = ('/synthesize tables', '/Houses', '/award ')
+commands = ('/synthesize tables', '/Houses', '/award ', '/sort me')
 messages = ()
 m_responses = ()
 c_responses = (('...', '...', 'Tables systhesized', 'Tables already in existense'),)
@@ -32,18 +32,17 @@ def exec_commands(com):
     if com is not None:
         for i in range(len(commands)):
             if com == commands[i] and i == 0:
-                tables = db.create_tables(houses)
-                print(tables)
+                tables = db.create_tables(houses, from_)
                 if tables == True:
                     for j in range(len(c_responses[i]) - 1):
-                        #can use join and split functions to create softer code?? at least in future instances
+# can use join and split functions to create softer code?? at least in future instances
                         bot.send_message(c_responses[i][j], from_)
                 else:
                     reply = c_responses[i][(len(c_responses[i])-1)]
                 break
             elif com == commands[i] and i == 1:
-                house_info = db.house_info()
-                reply = 'Houses'.center(20,'_')+'\n'+'HOUSE'+ ' '*14+'|SCORE'+'\n'
+                house_info = db.house_info(from_)
+                reply = 'Houses'.center(20,'_')+'\n'+'HOUSE'+ ' '*14+'SCORE'+'\n'
                 for house in house_info:
                     if house[0] == 3:
                         reply += f'{house[1]}' + ' '*12 + f'{house[2]}'+'\n'
@@ -54,13 +53,15 @@ def exec_commands(com):
             elif com.startswith(commands[i]) and i == 2:
                 instructions = com.split()
                 id = 0
-                print('hey',)
                 for house in houses:
                     id += 1
-                    print('penny')
                     if house == instructions[1]:
-                        score = db.update_house_score(id, instructions[2])
+                        score = db.update_house_score(id, instructions[2], from_)
                         reply = f"{instructions[1]} new score is {score} "
+            elif com == commands[i] and i == 3:
+                username = item['message']['from']['username']
+                num = db.add_member_info(username, from_)
+                reply = f"Better be... {houses[num-1]}!!!"
                     
     return reply
 
@@ -85,7 +86,7 @@ while True:
             #Identifies situations where bot has just been add to a group and replies as directed
             if "my_chat_member" in item:
                 message = item["my_chat_member"]["chat"]["title"]
-                reply = "Sup"
+                reply = "Mmmmmmm so this is " + message + ".\nInteresting..."
                 from_ = item["my_chat_member"]["chat"]["id"]
             #Identifies if message was sent from group to the make reply function
             elif item["message"]["chat"]["type"] == "supergroup" or "group":
