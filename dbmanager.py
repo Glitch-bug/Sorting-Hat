@@ -39,7 +39,20 @@ class datamanager():
         else:
             house_info = self.cur.execute("SELECT * FROM {} WHERE id = ?".format(Houses),[id])
         return house_info
-    
+
+    def member_info(self, chat_id, username=None):
+        member_info = None
+        Members = f'"Members_{chat_id}'
+        if username == None:
+            member_info = self.cur.execute(
+                "SELECT * FROM {}".format(Members)
+            )
+        else:
+            member_info = self.cur.execute(
+                "SELECT * FROM {} where id = ?".format(Houses),[username]
+            )
+        return member_info
+
     def update_house_score(self, id, points, chat_id):
         """A updates a house's score by the specified amount"""
         Houses = f'"Houses_{chat_id}"'
@@ -59,6 +72,7 @@ class datamanager():
 
     def add_member_info(self, username, chat_id):
         Members = f'"Members_{chat_id}"'
+        print(Members)
         id = self.sort_member()
         self.cur.execute("""
         INSERT INTO {} (chat_id, username, house_id, status) VALUES(?, ?, ?, ?)""".format(Members),[chat_id, username, id, 'student'])

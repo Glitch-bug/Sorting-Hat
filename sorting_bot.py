@@ -17,9 +17,8 @@ class telegram_chatbot():
         r = requests.get(url)
         return json.loads(r.content)
     
-    def send_message(self, msg, chat_id):
-        """Sends mesage using Telegram API attributes """
-        url = self.base + "sendMessage?chat_id={}&text={}".format(chat_id, msg)
+    def send_message(self, msg, chat_id, parse_mode=None):
+        url = self.base + "sendMessage?chat_id={}&text={}&parse_mode={}".format(chat_id, msg, parse_mode)
         if msg is not None:
             requests.get(url)
     
