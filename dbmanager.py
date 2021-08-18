@@ -42,15 +42,17 @@ class datamanager():
 
     def member_info(self, chat_id, username=None):
         member_info = None
-        Members = f'"Members_{chat_id}'
+        Members = f'"Members_{chat_id}"'
+        print(Members)
         if username == None:
             member_info = self.cur.execute(
                 "SELECT * FROM {}".format(Members)
-            )
+            ).fetchall()
+            print(member_info)
         else:
             member_info = self.cur.execute(
                 "SELECT * FROM {} where id = ?".format(Houses),[username]
-            )
+            ).fetchone()
         return member_info
 
     def update_house_score(self, id, points, chat_id):
