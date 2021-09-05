@@ -29,8 +29,13 @@ houses = ('Gryffindor', 'Hufflepuff', 'Slytherin', 'Ravenclaw')
 
 #Administrators
 apfile = os.path.abspath(r'.\appointed.txt')
-with open(apfile) as file_object:
-    admins = file_object.readlines()
+try:
+    with open(apfile) as file_object:
+        admins = file_object.readlines()
+except FileNotFoundError:
+    with open(apfile, 'w') as file_object:
+        file_object.write('')
+    admins = []
 
 print(admins)
 
@@ -130,7 +135,8 @@ def make_reply(msg):
 def add_admin(username):
     if username not in admins:
         with open(apfile, 'a') as file_object:
-            file_object.write(username)
+            file_object.write(f'{username}\n')
+            admins.append(username)
         return True
     else:
         return None
