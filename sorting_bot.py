@@ -22,6 +22,11 @@ class telegram_chatbot():
         if msg is not None:
             requests.get(url)
     
+    def get_chatmember(self, user_id, chat_id):
+        url = self.base + "getChatMember?chat_id={}&user_id={}".format(chat_id, user_id)
+        r = requests.get(url)
+        return json.loads(r.content)
+    
     def read_token_from_config_file(self, config):
         """Reads token from config file"""
         parser = cfg.ConfigParser()

@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import os
 from random import randint
 
 class datamanager():
@@ -13,14 +14,14 @@ class datamanager():
         Members = f'"Members_{chat_id}"'
         Houses = f'"Houses_{chat_id}"'
         try:
-            self.members = self.cur.execute('CREATE TABLE {} (id INTEGER PRIMARY KEY AUTOINCREMENT, chat_id integer, username text, house_id integer, status text, score integer)'.format(Members))
             self.con_houses = self.cur.execute("""
             CREATE TABLE {} (id integer primary key autoincrement, house_name text, house_score integer
             )""".format(Houses))
+            self.members = self.cur.execute('CREATE TABLE {} (id INTEGER PRIMARY KEY AUTOINCREMENT, chat_id integer, username text, house_id integer, status text, score integer, user_id integer )'.format(Members))
             self.add_houses_info(houses, chat_id)
             return True
-        except sql.OperationalError:
-            print(sql.OperationalError)
+        except sql.OperationalError as sO:
+            print(sO)
             return False
     
     
@@ -40,20 +41,6 @@ class datamanager():
             house_info = self.cur.execute("SELECT * FROM {} WHERE id = ?".format(Houses),[id])
         return house_info
 
-    def member_info(self, chat_id, username=None):
-        member_info = None
-        Members = f'"Members_{chat_id}"'
-        print(Members)
-        if username == None:
-            member_info = self.cur.execute(
-                "SELECT * FROM {}".format(Members)
-            ).fetchall()
-            print(member_info)
-        else:
-            member_info = self.cur.execute(
-                "SELECT * FROM {} where id = ?".format(Houses),[username]
-            ).fetchone()
-        return member_info
 
     def update_house_score(self, id, points, chat_id):
         """A updates a house's score by the specified amount"""
@@ -68,15 +55,44 @@ class datamanager():
         return house_score
 
     #Member related functions
+    def update_member_status(self, chat_id, id, status):
+        Members = f'"Members_{chat_id}"'
+        self.cur.execute("UPDATE {} SET status = ? WHERE user_id = ?".format(Members), [status, id])
+        self.con.commit()
+        
+
+    def member_info(self, chat_id, username=None):
+        member_info = None
+        Members = f'"Members_{chat_id}"'
+        print(Members)
+        if username == None:
+            member_info = self.cur.execute(
+                "SELECT * FROM {}".format(Members)
+            ).fetchall()
+        else:
+            member_info = self.cur.execute(
+                "SELECT * FROM {} where username = ?".format(Houses),[username]
+            ).fetchone()
+        return member_info
+
     def sort_member(self):
         id = randint(1,4)
         return id
 
-    def add_member_info(self, username, chat_id):
+    def check_member(self, chat_id, user_id):
+        check = self.cur.execute("SELECT house_id FROM {} where user_id= ?".format(chat_id),[user_id]).fetchone()
+        return check
+
+    def add_member_info(self, username, chat_id, user_id):
         Members = f'"Members_{chat_id}"'
         print(Members)
-        id = self.sort_member()
-        self.cur.execute("""
-        INSERT INTO {} (chat_id, username, house_id, status) VALUES(?, ?, ?, ?)""".format(Members),[chat_id, username, id, 'student'])
-        self.con.commit()
-        return id
+        user_id = user_id
+        check = self.check_member(Members, user_id)
+        if  check == None:
+            id = self.sort_member()
+            self.cur.execute("""
+            INSERT INTO {} (chat_id, username, house_id, status, user_id) VALUES(?, ?, ?, ?, ?)""".format(Members),[chat_id, username, id, 'student', user_id])
+            self.con.commit()
+            return (id, True)
+        else:
+            return (check, None)
