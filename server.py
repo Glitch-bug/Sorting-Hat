@@ -6,8 +6,9 @@ from sorting_bot import telegram_chatbot
 from dbmanager import datamanager
 
 #File paths
-config_path = os.path.abspath('.\config.cfg')
-db_path = os.path.abspath('.\database.sql')
+print(os.path.abs(r'.\config.cfg'))
+config_path = os.path.abspath(r'.\config.cfg')
+db_path = os.path.abspath(r'.\database.sql')
 
 #Class calls
 bot = telegram_chatbot(config_path)
