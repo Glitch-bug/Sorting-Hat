@@ -6,12 +6,12 @@ from sorting_bot import telegram_chatbot
 from dbmanager import datamanager
 
 #File paths
-if os.path.isfile(os.path.abspath(r'.\config.cfg')):
-    config_path = os.path.abspath(r'.\config.cfg')
-    db_path = os.path.abspath(r'.\database.sql')
-else:
-    config_path = r'Sorting-Hat\config.cfg'
-    db_path = r'Sorting-Hat\database.sql'
+# if os.path.isfile(os.path.abspath(r'.\config.cfg')):
+#     config_path = os.path.abspath(r'.\config.cfg')
+#     db_path = os.path.abspath(r'.\database.sql')
+# else:
+config_path = r'Sorting-Hat\config.cfg'
+db_path = r'Sorting-Hat\database.sql'
     
 
 #Class calls
