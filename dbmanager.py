@@ -59,6 +59,10 @@ class datamanager():
         Members = f'"Members_{chat_id}"'
         self.cur.execute("UPDATE {} SET status = ? WHERE user_id = ?".format(Members), [status, id])
         self.con.commit()
+
+    def get_admin_list(self, chat_id):
+        Members = f'"Members_{chat_id}"'
+        self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
         
 
     def member_info(self, chat_id, username=None):

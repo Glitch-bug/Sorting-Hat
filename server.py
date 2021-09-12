@@ -35,12 +35,11 @@ houses = ('Gryffindor', 'Hufflepuff', 'Slytherin', 'Ravenclaw')
 #Administrators
 apfile = os.path.abspath(r'.\appointed.txt')
 try:
-    with open(apfile) as file_object:
-        admins = file_object.readlines()
-except FileNotFoundError:
-    with open(apfile, 'w') as file_object:
-        file_object.write('')
+    admins = list(db.get_admin_list(from_))
+    print(admins)
+except:
     admins = []
+    reply = "To begin try synthesizing tables with the /synthesize tables command"
 
 print(admins)
 
@@ -139,9 +138,7 @@ def make_reply(msg):
 
 def add_admin(username):
     if username not in admins:
-        with open(apfile, 'a') as file_object:
-            file_object.write(f'{username}\n')
-            admins.append(username)
+        admins.append(username)
         return True
     else:
         return None
