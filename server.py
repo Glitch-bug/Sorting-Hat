@@ -6,7 +6,7 @@ from sorting_bot import telegram_chatbot
 from dbmanager import datamanager
 
 #File paths
-print(os.path.abs(r'.\config.cfg'))
+print(os.path.abspath(r'.\config.cfg'))
 config_path = os.path.abspath(r'.\config.cfg')
 db_path = os.path.abspath(r'.\database.sql')
 
