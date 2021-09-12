@@ -62,8 +62,8 @@ class datamanager():
 
     def get_admin_list(self, chat_id):
         Members = f'"Members_{chat_id}"'
-        self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
-        
+        admins = self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
+        return admins
 
     def member_info(self, chat_id, username=None):
         member_info = None
