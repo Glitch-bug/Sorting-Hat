@@ -55,7 +55,7 @@ def exec_commands(com):
 # can use join and split functions to create softer code?? at least in future instances
                     bot.send_message(c_responses[0][j], from_)
             else:
-                reply = c_responses[i][(len(c_responses[i])-1)]
+                reply = c_responses[0][(len(c_responses[0])-1)]
         elif com == commands[1]:
             house_info = db.house_info(from_)
             reply = '*__Houses__*'.center(20,)+' '*10+'\n'+'HOUSE'+ ' '*14+'SCORE'+'\n'
