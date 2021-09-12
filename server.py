@@ -33,13 +33,14 @@ c_responses = (('...', '...', 'Tables systhesized', 'Tables already in existense
 houses = ('Gryffindor', 'Hufflepuff', 'Slytherin', 'Ravenclaw')
 
 #Administrators
-apfile = os.path.abspath(r'.\appointed.txt')
-try:
-    admins = list(db.get_admin_list(from_))
+admins = db.get_admin_list(from_)
+if admins:
+    admins = list(admins)
     print(admins)
-except:
+else:
     admins = []
-    reply = "To begin try synthesizing tables with the /synthesize tables command"
+    print(admins)
+    reply = "To begin create a unique database for your group using the '/synthesize tables' command"
 
 print(admins)
 

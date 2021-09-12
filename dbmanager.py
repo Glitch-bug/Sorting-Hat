@@ -62,9 +62,13 @@ class datamanager():
 
     def get_admin_list(self, chat_id):
         Members = f'"Members_{chat_id}"'
-        admins = self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
-        return admins
-
+        try:
+            admins = self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
+            return admins
+        except sql.OperationalError as sO:
+            print(sO)
+            return False
+            
     def member_info(self, chat_id, username=None):
         member_info = None
         Members = f'"Members_{chat_id}"'
