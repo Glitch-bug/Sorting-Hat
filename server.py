@@ -10,8 +10,8 @@ from dbmanager import datamanager
 #     config_path = os.path.abspath(r'.\config.cfg')
 #     db_path = os.path.abspath(r'.\database.sql')
 # else:
-config_path = r'Sorting-Hat\config.cfg'
-db_path = r'Sorting-Hat\database.sql'
+config_path = r'/app/config.cfg'
+db_path = r'/app/database.sql'
     
 
 #Class calls
