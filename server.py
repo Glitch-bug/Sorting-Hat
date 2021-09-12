@@ -10,7 +10,8 @@ if os.path.isfile(os.path.abspath(r'.\config.cfg')):
     config_path = os.path.abspath(r'.\config.cfg')
     db_path = os.path.abspath(r'.\database.sql')
 else:
-    print('pigs')
+    config_path = r'SORTING HAT BOT\config.cfg'
+    db_path = r'SORTING HAT BOT\database.sql'
     
 
 #Class calls
