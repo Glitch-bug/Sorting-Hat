@@ -136,19 +136,6 @@ def add_admin(username):
 
 #Checks for updates to messages and passes re to make reply function 
 while True:
-    if not admin_check:
-        #Administrators
-        admin_check = True 
-        admins = db.get_admin_list(from_)
-        if admins:
-            admins = list(admins)
-            print(admins)
-        else:
-            admins = []
-            print(admins)
-            reply = "To begin create a unique database for your group using the '/synthesize tables' command"
-
-        print(admins)
     print('...')
     updates = bot.get_updates(offset=update_id)
     updates = updates['result']
@@ -181,6 +168,18 @@ while True:
                     parse_mode = 'MarkdownV2'
                 else:
                     reply = make_reply(message)
+            if not admin_check:
+                #Administrators
+                admin_check = True 
+                admins = db.get_admin_list(from_)
+                if admins:
+                    admins = list(admins)
+                    print(admins)
+                else:
+                    admins = []
+                    print(admins)
+                    reply = "To begin create a unique database for your group using the '/synthesize tables' command"
+                print(admins)
         except KeyError:
             message = None
             from_ = None
