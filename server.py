@@ -32,17 +32,7 @@ c_responses = (('...', '...', 'Tables systhesized', 'Tables already in existense
 #Tuples of Houses
 houses = ('Gryffindor', 'Hufflepuff', 'Slytherin', 'Ravenclaw')
 
-#Administrators
-admins = db.get_admin_list(from_)
-if admins:
-    admins = list(admins)
-    print(admins)
-else:
-    admins = []
-    print(admins)
-    reply = "To begin create a unique database for your group using the '/synthesize tables' command"
-
-print(admins)
+admin_check = False
 
 def exec_commands(com):
     """Handles and replies any recieved commands"""
@@ -146,6 +136,19 @@ def add_admin(username):
 
 #Checks for updates to messages and passes re to make reply function 
 while True:
+    if not admin_check:
+        #Administrators
+        admin_check = True 
+        admins = db.get_admin_list(from_)
+        if admins:
+            admins = list(admins)
+            print(admins)
+        else:
+            admins = []
+            print(admins)
+            reply = "To begin create a unique database for your group using the '/synthesize tables' command"
+
+        print(admins)
     print('...')
     updates = bot.get_updates(offset=update_id)
     updates = updates['result']
