@@ -60,15 +60,16 @@ def exec_commands(com):
             instructions = com.split()
             id = 0
             info = user_query()
-            username = info['user']['username']
-            if username in admins:
+            user_id = info['user']['id']
+            check = db.check_admin(from_, user_id)
+            if check and check != 'not sorted':
                 for house in houses:
                     id += 1
                     if house == instructions[1]:
                         score = db.update_house_score(id, instructions[2], from_)
                         reply = f"{instructions[1]} new score is {score}"
             else:
-                reply = "You have no power over me! PS:(if you are an admin use the /appoint me command to be recognised as such changing usernames may cause errors)"
+                reply = "You have no power over me! PS:(if you are an admin use the /appoint me command to be recognised as such)"
 
 
         elif com == commands[3]:
@@ -90,17 +91,21 @@ def exec_commands(com):
             user_id = info['user']['id']
             status_info = info['status']
             if status_info == 'creator':
-                verify = db.check_admin(user_id, username)
-                if verify:
+                verify = db.check_admin(from_, user_id)
+                if  not verify:
                     db.update_member_status(from_, info['user']['id'], 'Headmaster')
                     reply = f"Rise Headmaster {username}"
+                elif verify == 'not sorted':
+                    reply = "Don't be hasty! if tables have already been created use the '/sort me' command to get yourself sorted first"
                 else:
-                    reply = "We've alread done this Headmaster"
+                    reply = "We've already done this Headmaster"
             elif status_info == 'administrator':
                 verify = db.check_admin(username)
-                if verify:
+                if not verify:
                     db.update_member_status(from_, info['user']['id'], 'Professor')
                     reply = f"Hence forth you shall be known as Professor {username}"
+                elif verify == 'not sorted':
+                    reply = "Don't be hasty! if tables have already been created use the '/sort me' command to get yourself sorted first"
                 else:
                     reply = "We've already done this Professor"
             else:

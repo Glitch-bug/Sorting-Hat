@@ -94,6 +94,14 @@ class datamanager():
     def check_admin(self, chat_id, user_id):
         Members = f'"Members_{chat_id}"'
         check = self.cur.execute("SELECT status FROM {} where user_id= ?".format(Members),[user_id]).fetchone()
+        print(check)
+        if check == None:
+            statement = 'not sorted'
+            return statement
+        if check[0] == 'student':
+            return False
+        else:
+            return True
         
     def add_member_info(self, username, chat_id, user_id):
         Members = f'"Members_{chat_id}"'
