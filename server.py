@@ -32,7 +32,6 @@ c_responses = (('...', '...', 'Tables systhesized', 'Tables already in existense
 #Tuples of Houses
 houses = ('Gryffindor', 'Hufflepuff', 'Slytherin', 'Ravenclaw')
 
-admin_check = False
 
 def exec_commands(com):
     """Handles and replies any recieved commands"""
@@ -88,16 +87,17 @@ def exec_commands(com):
         elif com == commands[6]:
             info = user_query()
             username = info['user']['username']
+            user_id = info['user']['id']
             status_info = info['status']
             if status_info == 'creator':
-                verify = add_admin(username)
+                verify = db.check_admin(user_id, username)
                 if verify:
                     db.update_member_status(from_, info['user']['id'], 'Headmaster')
                     reply = f"Rise Headmaster {username}"
                 else:
                     reply = "We've alread done this Headmaster"
             elif status_info == 'administrator':
-                verify = add_admin(username)
+                verify = db.check_admin(username)
                 if verify:
                     db.update_member_status(from_, info['user']['id'], 'Professor')
                     reply = f"Hence forth you shall be known as Professor {username}"
@@ -127,13 +127,6 @@ def make_reply(msg):
                 reply = m_responses[i]
     return reply
 
-def add_admin(username):
-    if username not in admins:
-        admins.append(username)
-        return True
-    else:
-        return None
-
 #Checks for updates to messages and passes re to make reply function 
 while True:
     print('...')
@@ -153,7 +146,7 @@ while True:
             elif item["message"]["chat"]["type"] == "supergroup" or "group":
                 message = item["message"]["text"]
                 from_ = item["message"]["chat"]["id"]
-                elif message.startswith('/'):
+                if message.startswith('/'):
                     reply = exec_commands(message)
                     # parse_mode = 'MarkdownV2' (prevents certain texts from being recieved for unkown reason)
                 else:

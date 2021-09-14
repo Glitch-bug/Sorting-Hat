@@ -60,14 +60,14 @@ class datamanager():
         self.cur.execute("UPDATE {} SET status = ? WHERE user_id = ?".format(Members), [status, id])
         self.con.commit()
 
-    def get_admin_list(self, chat_id):
-        Members = f'"Members_{chat_id}"'
-        try:
-            admins = self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
-            return admins
-        except sql.OperationalError as sO:
-            print(sO)
-            return False
+    # def get_admin_list(self, chat_id):
+    #     Members = f'"Members_{chat_id}"'
+    #     try:
+    #         admins = self.cur.execute("SELECT * FROM {} WHERE status = ? OR status = ?".format(Members), ['creator', 'adminsitrator'])
+    #         return admins
+    #     except sql.OperationalError as sO:
+    #         print(sO)
+    #         return False
             
     def member_info(self, chat_id, username=None):
         member_info = None
@@ -91,6 +91,10 @@ class datamanager():
         check = self.cur.execute("SELECT house_id FROM {} where user_id= ?".format(chat_id),[user_id]).fetchone()
         return check
 
+    def check_admin(self, chat_id, user_id):
+        Members = f'"Members_{chat_id}"'
+        check = self.cur.execute("SELECT status FROM {} where user_id= ?".format(Members),[user_id]).fetchone()
+        
     def add_member_info(self, username, chat_id, user_id):
         Members = f'"Members_{chat_id}"'
         print(Members)
