@@ -6,13 +6,13 @@ from sorting_bot import telegram_chatbot
 from dbmanager import datamanager
 
 #File paths
-# if os.path.isfile(os.path.abspath(r'.\config.cfg')):
-#     config_path = os.path.abspath(r'.\config.cfg')
-#     db_path = os.path.abspath(r'.\database.sql')
-# else:
-config_path = r'/app/config.cfg'
-db_path = r'/app/database.sql'
-    
+if os.path.isfile(os.path.abspath(r'.\config.cfg')):
+    config_path = os.path.abspath(r'.\config.cfg')
+    db_path = os.path.abspath(r'.\database.sql')
+else:
+    config_path = r'/app/config.cfg'
+    db_path = r'/app/database.sql'
+        
 
 #Class calls
 bot = telegram_chatbot(config_path)
@@ -147,23 +147,12 @@ while True:
             #Identifies situations where bot has just been add to a group and replies as directed
             if "my_chat_member" in item:
                 message = item["my_chat_member"]["chat"]["title"]
-                reply = "Mmmmmmm so this is " + message + ".\nInteresting...\n To begin create a unique database for your group using the '/synthesize tables' command"
+                reply = "Mmmmmmm so this is " + message + ".\nInteresting...\nTo begin create a unique database for your group using the '/synthesize tables' command"
                 from_ = item["my_chat_member"]["chat"]["id"]
             #Identifies if message was sent from group to the make reply function
             elif item["message"]["chat"]["type"] == "supergroup" or "group":
                 message = item["message"]["text"]
                 from_ = item["message"]["chat"]["id"]
-                if not admin_check:
-                    #Administrators
-                    admin_check = True 
-                    admins = db.get_admin_list(from_)
-                    if admins:
-                        admins = list(admins)
-                        print(admins)
-                    else:
-                        admins = []
-                        print(admins)
-                        reply = "To begin create a unique database for your group using the '/synthesize tables' command"
                 elif message.startswith('/'):
                     reply = exec_commands(message)
                     # parse_mode = 'MarkdownV2' (prevents certain texts from being recieved for unkown reason)
