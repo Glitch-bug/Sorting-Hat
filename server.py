@@ -100,7 +100,7 @@ def exec_commands(com):
                 else:
                     reply = "We've already done this Headmaster"
             elif status_info == 'administrator':
-                verify = db.check_admin(username)
+                verify = db.check_admin(from_, user_id)
                 if not verify:
                     db.update_member_status(from_, info['user']['id'], 'Professor')
                     reply = f"Hence forth you shall be known as Professor {username}"
