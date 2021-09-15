@@ -55,7 +55,6 @@ def exec_commands(com):
                     reply += f"Score: {house[2]}pts\n\n"
                 else:
                     reply += f"Score: 0pts\n\n"
-        # testing    
         elif com.startswith(commands[2]):
             instructions = com.split()
             id = 0
