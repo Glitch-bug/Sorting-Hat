@@ -24,7 +24,7 @@ reply = ''
 parse_mode = None
 
 #Commands and Reponses tuples
-commands = ('/synthesize tables', '/Houses', '/award ', '/sort me',  '/member list', '*/about me', '/appoint me', '/commands list')
+commands = ('/synthesize tables', '/Houses', '/award ', '/sort me',  '/member list', '/about me', '/appoint me', '/commands list')
 messages = ()
 m_responses = ()
 c_responses = (('...', '...', 'Tables systhesized', 'Tables already in existense'),)
@@ -47,14 +47,14 @@ def exec_commands(com):
                 reply = c_responses[0][(len(c_responses[0])-1)]
         elif com == commands[1]:
             house_info = db.house_info(from_)
-            reply = '*__Houses__*'.center(20,)+' '*10+'\n'+'HOUSE'+ ' '*14+'SCORE'+'\n'
+            # Add feautures to find highest scoring house and return number of members
+            reply = "Houses:\n"
             for house in house_info:
-                if house[0] == 3:
-                    reply += f'{house[1]}' + ' '*12 + f'{house[2]}'+'\n'
-                elif house[0] == 4:
-                    reply += f'{house[1]}' + ' '*8 + f'{house[2]}'+'\n'
+                reply += house[1] + "\n"
+                if house[2] != None:
+                    reply += f"Score: {house[2]}pts\n\n"
                 else:
-                    reply += f'{house[1]}' + ' '*10 + f'{house[2]}'+'\n'
+                    reply += f"Score: 0pts\n\n"
                     
         elif com.startswith(commands[2]):
             instructions = com.split()
@@ -84,7 +84,13 @@ def exec_commands(com):
         elif com == commands[4]:
             m_list = db.member_info(from_)
             reply = str(m_list)
-            print(reply)
+        elif com == commands[5]:
+            info = user_query()
+            username = info['user']['username']
+            m_info = db.member_info(from_, username)
+            reply = f"""
+            Username: {m_info[2]}\nHouse: {houses[m_info[3]]}\nStatus: {m_info[4]}\nScore: {m_info[5]}\n
+            """
         elif com == commands[6]:
             info = user_query()
             username = info['user']['username']
